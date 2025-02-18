@@ -1,0 +1,17 @@
+{
+	"name": "ds_http_html",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "git_http_1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation",
+				"relativeUrl": "Tulagapu/blob/main/Homepage.html"
+			}
+		}
+	}
+}
