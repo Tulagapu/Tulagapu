@@ -1,0 +1,17 @@
+{
+	"name": "file",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "File",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureFileStorageLocation",
+				"folderPath": "testfs"
+			}
+		}
+	}
+}
