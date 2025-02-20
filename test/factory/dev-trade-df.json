@@ -1,0 +1,9 @@
+{
+	"name": "dev-trade-df",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "fd857929-ea4c-496b-8f02-ecfd0fabe221",
+		"tenantId": "651a4cce-f5dc-40c2-b2de-130af64fa41e"
+	}
+}
