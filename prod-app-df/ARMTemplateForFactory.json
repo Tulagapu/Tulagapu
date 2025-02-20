@@ -7,21 +7,25 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "prod-app-df"
 		},
-		"AzureBlobStorage1_connectionString": {
+		"AzureFileStorage1_connectionString": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
+			"metadata": "Secure string for 'connectionString' of 'AzureFileStorage1'"
 		},
-		"GitHub1tk_credential": {
+		"GitHub1_credential": {
 			"type": "secureString",
-			"metadata": "Secure string for 'credential' of 'GitHub1tk'"
+			"metadata": "Secure string for 'credential' of 'GitHub1'"
 		},
-		"GitHub1tk_properties_typeProperties_username": {
+		"GitHub1_properties_typeProperties_username": {
 			"type": "string",
 			"defaultValue": "Tulagapu"
 		},
-		"HttpServer1_properties_typeProperties_url": {
+		"HttpServer1pro_properties_typeProperties_url": {
 			"type": "string",
-			"defaultValue": "https://github.com/Tulagapu/Tulagapu"
+			"defaultValue": "https://github.com/Tulagapu"
+		},
+		"prodaphttp_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://github.com/Tulagapu"
 		}
 	},
 	"variables": {
@@ -60,21 +64,67 @@
 							"sink": {
 								"type": "BinarySink",
 								"storeSettings": {
-									"type": "AzureBlobStorageWriteSettings"
+									"type": "AzureFileStorageWriteSettings"
 								}
 							},
 							"enableStaging": false
 						},
 						"inputs": [
 							{
-								"referenceName": "Binary1",
+								"referenceName": "Binary2",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "Binary2",
+								"referenceName": "Binary1",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Copy data2",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "HttpReadSettings",
+									"requestMethod": "GET"
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureFileStorageWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "Binary3",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "file",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -84,11 +134,14 @@
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
-				"annotations": []
+				"annotations": [],
+				"lastPublishTime": "2025-02-20T11:15:03Z"
 			},
 			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Binary2')]",
 				"[concat(variables('factoryId'), '/datasets/Binary1')]",
-				"[concat(variables('factoryId'), '/datasets/Binary2')]"
+				"[concat(variables('factoryId'), '/datasets/Binary3')]",
+				"[concat(variables('factoryId'), '/datasets/file')]"
 			]
 		},
 		{
@@ -97,20 +150,20 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "HttpServer1",
+					"referenceName": "AzureFileStorage1",
 					"type": "LinkedServiceReference"
 				},
 				"annotations": [],
 				"type": "Binary",
 				"typeProperties": {
 					"location": {
-						"type": "HttpServerLocation",
-						"relativeUrl": "Tulagapu/blob/main/eduction.html"
+						"type": "AzureFileStorageLocation",
+						"folderPath": "prod"
 					}
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/HttpServer1')]"
+				"[concat(variables('factoryId'), '/linkedServices/AzureFileStorage1')]"
 			]
 		},
 		{
@@ -119,62 +172,122 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
+					"referenceName": "prodaphttp",
 					"type": "LinkedServiceReference"
 				},
 				"annotations": [],
 				"type": "Binary",
 				"typeProperties": {
 					"location": {
-						"type": "AzureBlobStorageLocation",
-						"container": "files"
+						"type": "HttpServerLocation",
+						"relativeUrl": "Sample-for-repo/blob/main/hello.txt"
 					}
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+				"[concat(variables('factoryId'), '/linkedServices/prodaphttp')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/AzureBlobStorage1')]",
+			"name": "[concat(parameters('factoryName'), '/Binary3')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "HttpServer1pro",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "HttpServerLocation",
+						"relativeUrl": " Tulagapu/blob/main/Homepage.html"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/HttpServer1pro')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/file')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureFileStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureFileStorageLocation",
+						"folderPath": "prod"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureFileStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureFileStorage1')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"type": "AzureBlobStorage",
+				"type": "AzureFileStorage",
 				"typeProperties": {
-					"connectionString": "[parameters('AzureBlobStorage1_connectionString')]"
+					"connectionString": "[parameters('AzureFileStorage1_connectionString')]",
+					"fileShare": "prodtest"
 				}
 			},
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/GitHub1tk')]",
+			"name": "[concat(parameters('factoryName'), '/GitHub1')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
 				"type": "GitHub",
 				"typeProperties": {
-					"username": "[parameters('GitHub1tk_properties_typeProperties_username')]",
+					"username": "[parameters('GitHub1_properties_typeProperties_username')]",
 					"credential": {
 						"type": "SecureString",
-						"value": "[parameters('GitHub1tk_credential')]"
+						"value": "[parameters('GitHub1_credential')]"
 					},
-					"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDgxMkJGMUI5LTZBMEQtNDdCNy1COEU5LUJEMENGMjU5NDZDMl8yMjkyOTAzNy1kYzdiLTRlZTItYTRhMC04M2E3MDUyNDIzNDYiDQp9"
+					"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQEZCRTg0NzY0LTEzNzgtNDZDQy05OEU0LTk1RTcxRkNGOTc0Ml9kMzBhZWIxNS0wMzU3LTRhMTktYjhhYy1jYTllZGJlMjk2ZWUiDQp9"
 				}
 			},
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/HttpServer1')]",
+			"name": "[concat(parameters('factoryName'), '/HttpServer1pro')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
 				"type": "HttpServer",
 				"typeProperties": {
-					"url": "[parameters('HttpServer1_properties_typeProperties_url')]",
+					"url": "[parameters('HttpServer1pro_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "Anonymous"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/prodaphttp')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "HttpServer",
+				"typeProperties": {
+					"url": "[parameters('prodaphttp_properties_typeProperties_url')]",
 					"enableServerCertificateValidation": true,
 					"authenticationType": "Anonymous"
 				}

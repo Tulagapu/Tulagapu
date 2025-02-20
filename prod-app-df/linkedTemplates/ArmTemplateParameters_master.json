@@ -5,17 +5,20 @@
 		"factoryName": {
 			"value": "prod-app-df"
 		},
-		"AzureBlobStorage1_connectionString": {
+		"AzureFileStorage1_connectionString": {
 			"value": ""
 		},
-		"GitHub1tk_credential": {
+		"GitHub1_credential": {
 			"value": ""
 		},
-		"GitHub1tk_properties_typeProperties_username": {
+		"GitHub1_properties_typeProperties_username": {
 			"value": "Tulagapu"
 		},
-		"HttpServer1_properties_typeProperties_url": {
-			"value": "https://github.com/Tulagapu/Tulagapu"
+		"HttpServer1pro_properties_typeProperties_url": {
+			"value": "https://github.com/Tulagapu"
+		},
+		"prodaphttp_properties_typeProperties_url": {
+			"value": "https://github.com/Tulagapu"
 		},
 		"containerUri": {
 			"value": ""
