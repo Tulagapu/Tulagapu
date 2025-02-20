@@ -7,29 +7,13 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "dev-trade-df"
 		},
-		"File_connectionString": {
+		"blob_connectionString": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'File'"
+			"metadata": "Secure string for 'connectionString' of 'blob'"
 		},
-		"GitHub1_credential": {
-			"type": "secureString",
-			"metadata": "Secure string for 'credential' of 'GitHub1'"
-		},
-		"HttpServer1_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'HttpServer1'"
-		},
-		"GitHub1_properties_typeProperties_username": {
+		"Http_github_properties_typeProperties_url": {
 			"type": "string",
-			"defaultValue": "Tulagapu"
-		},
-		"HttpServer1_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://github.com/Tulagapu/Tulagapu"
-		},
-		"HttpServer1_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "Tulagapu"
+			"defaultValue": " https://github.com/Tulagapu"
 		},
 		"containerUri": {
 			"type": "string",
@@ -58,23 +42,11 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
-					"File_connectionString": {
-						"value": "[parameters('File_connectionString')]"
+					"blob_connectionString": {
+						"value": "[parameters('blob_connectionString')]"
 					},
-					"GitHub1_credential": {
-						"value": "[parameters('GitHub1_credential')]"
-					},
-					"HttpServer1_password": {
-						"value": "[parameters('HttpServer1_password')]"
-					},
-					"GitHub1_properties_typeProperties_username": {
-						"value": "[parameters('GitHub1_properties_typeProperties_username')]"
-					},
-					"HttpServer1_properties_typeProperties_url": {
-						"value": "[parameters('HttpServer1_properties_typeProperties_url')]"
-					},
-					"HttpServer1_properties_typeProperties_userName": {
-						"value": "[parameters('HttpServer1_properties_typeProperties_userName')]"
+					"Http_github_properties_typeProperties_url": {
+						"value": "[parameters('Http_github_properties_typeProperties_url')]"
 					}
 				}
 			},

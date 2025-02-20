@@ -7,29 +7,13 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "dev-trade-df"
 		},
-		"File_connectionString": {
+		"blob_connectionString": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'File'"
+			"metadata": "Secure string for 'connectionString' of 'blob'"
 		},
-		"GitHub1_credential": {
-			"type": "secureString",
-			"metadata": "Secure string for 'credential' of 'GitHub1'"
-		},
-		"HttpServer1_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'HttpServer1'"
-		},
-		"GitHub1_properties_typeProperties_username": {
+		"Http_github_properties_typeProperties_url": {
 			"type": "string",
-			"defaultValue": "Tulagapu"
-		},
-		"HttpServer1_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://github.com/Tulagapu/Tulagapu"
-		},
-		"HttpServer1_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "Tulagapu"
+			"defaultValue": " https://github.com/Tulagapu"
 		}
 	},
 	"variables": {
@@ -42,24 +26,6 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
-					{
-						"name": "Web1",
-						"type": "WebActivity",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"method": "GET",
-							"headers": {},
-							"url": "https://github.com/Tulagapu/Tulagapu"
-						}
-					},
 					{
 						"name": "Copy data1",
 						"type": "Copy",
@@ -74,57 +40,50 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "BinarySource",
+								"type": "DelimitedTextSource",
 								"storeSettings": {
 									"type": "HttpReadSettings",
 									"requestMethod": "GET"
 								},
 								"formatSettings": {
-									"type": "BinaryReadSettings"
+									"type": "DelimitedTextReadSettings"
 								}
 							},
 							"sink": {
-								"type": "BinarySink",
+								"type": "DelimitedTextSink",
 								"storeSettings": {
-									"type": "AzureFileStorageWriteSettings"
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
 								}
 							},
-							"enableStaging": false
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
 						},
 						"inputs": [
 							{
-								"referenceName": "git",
+								"referenceName": "http_github_html",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "file",
+								"referenceName": "blobText1",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						]
-					},
-					{
-						"name": "Web2",
-						"type": "WebActivity",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"method": "GET",
-							"headers": {
-								"test1": "file"
-							},
-							"url": "https://github.com/Tulagapu/Tulagapu"
-						}
 					}
 				],
 				"policy": {
@@ -133,101 +92,88 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/git')]",
-				"[concat(variables('factoryId'), '/datasets/file')]"
+				"[concat(variables('factoryId'), '/datasets/http_github_html')]",
+				"[concat(variables('factoryId'), '/datasets/blobText1')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/file')]",
+			"name": "[concat(parameters('factoryName'), '/blobText1')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "File",
+					"referenceName": "blob",
 					"type": "LinkedServiceReference"
 				},
 				"annotations": [],
-				"type": "Binary",
+				"type": "DelimitedText",
 				"typeProperties": {
 					"location": {
-						"type": "AzureFileStorageLocation",
-						"folderPath": "testfs"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/File')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/git')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "HttpServer1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "HttpServerLocation"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/HttpServer1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/File')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureFileStorage",
-				"typeProperties": {
-					"connectionString": "[parameters('File_connectionString')]",
-					"fileShare": "test"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/GitHub1')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "GitHub",
-				"typeProperties": {
-					"username": "[parameters('GitHub1_properties_typeProperties_username')]",
-					"credential": {
-						"type": "SecureString",
-						"value": "[parameters('GitHub1_credential')]"
+						"type": "AzureBlobStorageLocation",
+						"container": "blob"
 					},
-					"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDgxQTU1QjJBLTg5N0YtNDA5Ni05NDY4LThCMTlBODE4QjdEOV81YWJjMDI3Mi0wMTRkLTQ4ODctODY4OC01NzhmY2JhYzQ0ZWEiDQp9"
-				}
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/blob')]"
+			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/HttpServer1')]",
+			"name": "[concat(parameters('factoryName'), '/http_github_html')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Http_github",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "HttpServerLocation",
+						"relativeUrl": "Tulagapu/blob/main/Homepage.html"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Http_github')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Http_github')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
 				"type": "HttpServer",
 				"typeProperties": {
-					"url": "[parameters('HttpServer1_properties_typeProperties_url')]",
+					"url": "[parameters('Http_github_properties_typeProperties_url')]",
 					"enableServerCertificateValidation": true,
-					"authenticationType": "Basic",
-					"userName": "[parameters('HttpServer1_properties_typeProperties_userName')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('HttpServer1_password')]"
-					}
+					"authenticationType": "Anonymous"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/blob')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('blob_connectionString')]"
 				}
 			},
 			"dependsOn": []
