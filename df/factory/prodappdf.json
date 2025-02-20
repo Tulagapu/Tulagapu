@@ -1,0 +1,9 @@
+{
+	"name": "prodappdf",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "cecfe7ff-7f23-42dd-8904-50f875fbe6f5",
+		"tenantId": "651a4cce-f5dc-40c2-b2de-130af64fa41e"
+	}
+}
