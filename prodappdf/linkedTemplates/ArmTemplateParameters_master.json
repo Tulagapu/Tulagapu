@@ -8,8 +8,17 @@
 		"file1_connectionString": {
 			"value": ""
 		},
+		"blob_connectionString": {
+			"value": ""
+		},
+		"AzureDataLakeStorage1_accountKey": {
+			"value": ""
+		},
 		"HttpServer1_properties_typeProperties_url": {
 			"value": "https://github.com/Tulagapu"
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"value": "https://prodappsa3.dfs.core.windows.net/"
 		},
 		"containerUri": {
 			"value": ""
