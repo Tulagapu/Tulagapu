@@ -1,0 +1,22 @@
+{
+	"name": "http_github_html",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Http_github",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation",
+				"relativeUrl": "Tulagapu/blob/main/Homepage.html"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
