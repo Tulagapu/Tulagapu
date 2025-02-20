@@ -1,0 +1,9 @@
+{
+	"name": "prod-app-df",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "8137007d-d355-4d3d-a8ae-68f84959cfdd",
+		"tenantId": "651a4cce-f5dc-40c2-b2de-130af64fa41e"
+	}
+}
