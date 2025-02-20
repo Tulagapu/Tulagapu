@@ -8,8 +8,8 @@
 		"blob_connectionString": {
 			"value": ""
 		},
-		"Http_github_properties_typeProperties_url": {
-			"value": " https://github.com/Tulagapu"
+		"HttpServer1github_properties_typeProperties_url": {
+			"value": "https://github.com/Tulagapu"
 		}
 	}
 }

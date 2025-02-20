@@ -11,9 +11,9 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'blob'"
 		},
-		"Http_github_properties_typeProperties_url": {
+		"HttpServer1github_properties_typeProperties_url": {
 			"type": "string",
-			"defaultValue": " https://github.com/Tulagapu"
+			"defaultValue": "https://github.com/Tulagapu"
 		},
 		"containerUri": {
 			"type": "string",
@@ -45,8 +45,8 @@
 					"blob_connectionString": {
 						"value": "[parameters('blob_connectionString')]"
 					},
-					"Http_github_properties_typeProperties_url": {
-						"value": "[parameters('Http_github_properties_typeProperties_url')]"
+					"HttpServer1github_properties_typeProperties_url": {
+						"value": "[parameters('HttpServer1github_properties_typeProperties_url')]"
 					}
 				}
 			},
